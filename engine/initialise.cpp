@@ -12,6 +12,13 @@ Game_Reqs::Game_Reqs(float inFPS, float inWidth, float inHeight) {
   timer = al_create_timer(1.0/FPS);
   check_timer(this);
 
+  al_init_font_addon();
+  al_init_ttf_addon();
+  font = al_load_ttf_font("engine/LiberationSerif-Bold.ttf", -72,0);
+  if(!font) {
+    std::cout << "oi" << std::endl;
+  }
+
   check_image_addon(this);
   display = al_create_display(screen_w,screen_h);
   check_display(this);

@@ -62,6 +62,11 @@ int main(int argc, char** argv) {
         case ALLEGRO_KEY_DOWN:
           key[KDOWN] = true;
           break;
+        case ALLEGRO_KEY_Q:
+          player.destroy();
+          reqs.destroy();
+          exit(0);
+          break;
       }
     } else if(ev.type == ALLEGRO_EVENT_KEY_UP) {
       switch (ev.keyboard.keycode) {

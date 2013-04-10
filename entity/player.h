@@ -4,6 +4,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <math.h>
 #include "blackhole.h"
 #include "../engine/error.h"
@@ -21,6 +23,7 @@ class Player {
     ALLEGRO_BITMAP *sprite;
     ALLEGRO_BITMAP *anim_up[5];
     ALLEGRO_BITMAP *anim_left[3];
+    ALLEGRO_FONT *font;
     int anim_state;
     float display_w, display_h;
     float sprite_w, sprite_h;

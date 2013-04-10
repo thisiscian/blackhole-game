@@ -4,6 +4,7 @@ using namespace std;
 
 Player::Player(Game_Reqs *reqs, int radius) {
   anim_state = 0;
+  font = reqs->font;
 
   r = radius;
   vel_r = 0;
@@ -114,7 +115,9 @@ void Player::draw() {
     fuel-=10;
   }
   if(r <= 1500+sprite_h/2) {
-    exit(0);
+    r = 1501;
+    al_clear_to_color(al_map_rgb_f(0,0,0));
+    al_draw_text(font,al_map_rgb_f(0.8,0.8,0.8),display_w/2,display_h/2-36,ALLEGRO_ALIGN_CENTRE, "GAME OVER");
   }
 }
 
