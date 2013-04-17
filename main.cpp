@@ -17,6 +17,7 @@ int main(int argc, char** argv) {
   ALLEGRO_COLOR background = al_map_rgb_f(0.0,0.0,0.0);
 
   bool key[4] = {false,false,false,false};
+  ALLEGRO_SAMPLE_ID booster_id[4];
   bool redraw = true;
 
   al_clear_to_color(background);
@@ -25,6 +26,7 @@ int main(int argc, char** argv) {
   Player player(&reqs, 1600);
   player.draw();
   blackhole.draw();
+  al_play_sample(reqs.noise,1.0,0.0,1.0,ALLEGRO_PLAYMODE_LOOP, &reqs.noise_id);
   al_flip_display();
   al_start_timer(reqs.timer);
 
@@ -52,15 +54,19 @@ int main(int argc, char** argv) {
       switch (ev.keyboard.keycode) {
         case ALLEGRO_KEY_LEFT:
           key[KLEFT] = true;
+          al_play_sample(reqs.booster,1.0,1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KLEFT]);
           break;
         case ALLEGRO_KEY_RIGHT:
           key[KRIGHT] = true;
+          al_play_sample(reqs.booster,1.0,-1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KRIGHT]);
           break;
         case ALLEGRO_KEY_UP:
           key[KUP] = true;
+          al_play_sample(reqs.booster,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KUP]);
           break;
         case ALLEGRO_KEY_DOWN:
           key[KDOWN] = true;
+          al_play_sample(reqs.booster,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KDOWN]);
           break;
         case ALLEGRO_KEY_Q:
           player.destroy();
@@ -72,15 +78,19 @@ int main(int argc, char** argv) {
       switch (ev.keyboard.keycode) {
         case ALLEGRO_KEY_LEFT:
           key[KLEFT] = false;
+          al_stop_sample(&booster_id[KLEFT]);
           break;
         case ALLEGRO_KEY_RIGHT:
           key[KRIGHT] = false;
+          al_stop_sample(&booster_id[KRIGHT]);
           break;
         case ALLEGRO_KEY_UP:
           key[KUP] = false;
+          al_stop_sample(&booster_id[KUP]);
           break;
         case ALLEGRO_KEY_DOWN:
           key[KDOWN] = false;
+          al_stop_sample(&booster_id[KDOWN]);
           break;
       }
     }

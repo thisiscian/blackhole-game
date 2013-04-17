@@ -7,17 +7,15 @@ Game_Reqs::Game_Reqs(float inFPS, float inWidth, float inHeight) {
   screen_h = inHeight;
 
   check_init(this);
+  check_audio();
+  reserve_audio_samples(2);
+
+  load_booster_sound(this, "resources/sound/booster.ogg");
+  load_blackhole_sound(this, "resources/sound/blackhole_noise.ogg");
+  
   check_keyboard(this);
-
-  timer = al_create_timer(1.0/FPS);
-  check_timer(this);
-
-  al_init_font_addon();
-  al_init_ttf_addon();
-  font = al_load_ttf_font("engine/LiberationSerif-Bold.ttf", -72,0);
-  if(!font) {
-    std::cout << "oi" << std::endl;
-  }
+  set_timer(this, FPS);
+  set_font(this, "resources/fonts/LiberationSerif-Bold.ttf", -72);
 
   check_image_addon(this);
   display = al_create_display(screen_w,screen_h);
@@ -35,6 +33,8 @@ void Game_Reqs::destroy() {
   al_destroy_timer(timer);
   al_destroy_display(display);
   al_destroy_event_queue(event_queue);
+  al_destroy_sample(booster);
+  al_destroy_sample(noise);
 }
 
 float Game_Reqs::get_FPS() {

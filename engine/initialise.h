@@ -4,6 +4,8 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 class Game_Reqs {
   private:
@@ -17,6 +19,8 @@ class Game_Reqs {
     ALLEGRO_EVENT_QUEUE *event_queue;
     ALLEGRO_TIMER *timer;
     ALLEGRO_FONT *font;
+    ALLEGRO_SAMPLE *booster, *noise;
+    ALLEGRO_SAMPLE_ID noise_id;
 
     float get_FPS();
     float get_width();

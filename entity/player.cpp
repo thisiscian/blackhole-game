@@ -70,7 +70,6 @@ void Player::down(bool move) {
 }
 
 void Player::draw() {
-  //al_draw_scaled_rotated_bitmap(anim_up[anim_state],sprite_w/2,sprite_h,display_w/2+r*sin(theta),display_h/2-r*cos(theta),0.75,0.75,theta,0);
 
   int bw = 2;
   int ox = 30, oy=10;
