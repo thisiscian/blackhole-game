@@ -1,9 +1,9 @@
 #include "player.h"
 #include <iostream>
-using namespace std;
 
 Player::Player(Game_Reqs *reqs, int radius) {
   anim_state = 0;
+  state = 0;
   font = reqs->font;
 
   r = radius;
@@ -24,25 +24,23 @@ Player::Player(Game_Reqs *reqs, int radius) {
   fuel = 10000;
   wait_for_boost = 5;
 
-  sprite = al_load_bitmap("img/ship002.png");
+  sprite = al_load_bitmap("resources/animations/player_ship.png");
   check_sprite(reqs, sprite);
 
-  for(int i=0; i<5; i++) {
-    anim_up[i] = al_create_sub_bitmap(sprite,2+40*i,2,38,38);
-    check_sprite(reqs,anim_up[i]);
-  }
-
-  for(int i=0; i<3; i++) {
-    anim_left[i] = al_create_sub_bitmap(sprite,2+40*i,42,38,38);
-    check_sprite(reqs,anim_left[i]);
+  for(int i=0; i<32; i++) {
+    for(int j=0; j<5; j++) {
+      sprite_animations[i][j] = al_create_sub_bitmap(sprite,1+40*j,1+40*i,38,38);
+      check_sprite(reqs,sprite_animations[i][j]);
+    }
   }
 }
 
-void Player::left(bool move) {
+void Player::down(bool move) {
   if(move && boost_fuel > 0) {
-    force_theta -= 0.5;
+    force_r -= 100.0;
     boost_fuel -= 2;
     wait_for_boost = 0;
+    state+=1;
   }
 }
 
@@ -51,6 +49,7 @@ void Player::right(bool move) {
     force_theta += 0.5;
     boost_fuel -= 2;
     wait_for_boost = 0;
+    state+=2;
   }
 }
 
@@ -59,15 +58,19 @@ void Player::up(bool move) {
     force_r += 100.0;
     boost_fuel -= 2;
     wait_for_boost = 0;
+    state+=4;
   }
 }
-void Player::down(bool move) {
+
+void Player::left(bool move) {
   if(move && boost_fuel > 0) {
-    force_r -= 100.0;
+    force_theta -= 0.5;
     boost_fuel -= 2;
     wait_for_boost = 0;
+    state+=8;
   }
 }
+
 
 void Player::draw() {
 
@@ -87,7 +90,7 @@ void Player::draw() {
   al_draw_filled_rectangle(display_w-ox, oy, display_w-10-ox, 100+oy-fuel/100, al_map_rgb_f(0.1,0.0,0.1));
   al_draw_filled_triangle(display_w-ox-7, 100+bw+5+oy, display_w-ox-7, 100+oy+bw+15, display_w-2-ox, 100+bw+oy+10, al_map_rgb_f(0.3,0.3,0.3));
 
-  al_draw_bitmap(anim_up[anim_state],(display_w-sprite_w)/2,(display_h-sprite_h)/2,0);
+  al_draw_bitmap(sprite_animations[state][anim_state],(display_w-sprite_w)/2,(display_h-sprite_h)/2,0);
 
   anim_state++;
   anim_state = anim_state % 5;
@@ -97,8 +100,10 @@ void Player::draw() {
   force_theta = 0.0;
 
   float grav_force = -10000/pow(r-1500,2);
+  state = 0;
   if(fuel <= 0) {
     grav_force *=100;
+    state = 16;
   }
 
   vel_r += (force_r+grav_force-vel_r)/60;

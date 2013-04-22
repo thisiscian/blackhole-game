@@ -66,8 +66,8 @@ void set_font(Game_Reqs *reqs, std::string path, int size) {
   al_init_ttf_addon();
   reqs->font = al_load_ttf_font(path.c_str(), size, 0);
   if(!reqs->font) {
-    std::cout << "Error: Failed to load \"" << path << "\"" << std::endl;
-    exit(1);
+    std::cout << "Error: Failed to load font at \"" << path << "\"" << std::endl;
+    exit(FONT_LOAD_FAIL);
   } 
 }
 
