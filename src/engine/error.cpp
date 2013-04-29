@@ -26,19 +26,19 @@ void reserve_audio_samples(int num) {
   }
 }
 
-void load_booster_sound(Game_Reqs *reqs, std::string path) {
-  reqs->booster = al_load_sample(path.c_str());
-  if(!reqs->booster) {
-    std::cerr << "ERROR: failed to load \"" << path << "\"" << std::endl;
+void load_booster_sound(Game_Reqs *reqs, ALLEGRO_FILE *booster_file) {
+  reqs->booster_sample = al_load_sample_f(booster_file, ".ogg");
+  if(!reqs->booster_sample) {
+    std::cerr << "ERROR: failed to load booster.ogg" << std::endl;
     reqs->destroy();
     exit(SAMPLE_LOAD_FAIL);
   } 
 }
 
-void load_blackhole_sound(Game_Reqs *reqs, std::string path) {
-  reqs->noise = al_load_sample(path.c_str());
-  if(!reqs->noise) {
-    std::cerr << "ERROR: failed to load \"" << path << "\"" << std::endl;
+void load_blackhole_sound(Game_Reqs *reqs, ALLEGRO_FILE *blackhole_file) {
+  reqs->blackhole_noise_sample = al_load_sample_f(blackhole_file, ".ogg");
+  if(!reqs->blackhole_noise_sample) {
+    std::cerr << "ERROR: failed to load blackhole_noise.ogg" << std::endl;
     reqs->destroy();
     exit(SAMPLE_LOAD_FAIL);
   } 
@@ -58,6 +58,13 @@ void set_timer(Game_Reqs *reqs, int fps) {
     std::cerr << "ERROR: Failed to create timer" << std::endl;
     reqs->destroy();
     exit(TIMER_FAIL);
+  }
+}
+
+void check_primitives() {
+  if(!al_init_primitives_addon()) {
+    std::cerr << "ERROR: Failed to initialise primitives" << std::endl;
+    exit(PRIMITIVES_FAIL);
   }
 }
 

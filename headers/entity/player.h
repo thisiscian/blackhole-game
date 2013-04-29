@@ -5,6 +5,8 @@
 #include <math.h>
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_image.h"
+#include "allegro5/internal/aintern_bitmap.h"
+#include "allegro5/allegro_memfile.h"
 //#include "allegro5/allegro_font.h"
 //#include "allegro5/allegro_ttf.h"
 #include "entity/blackhole.h"

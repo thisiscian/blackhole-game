@@ -1,5 +1,8 @@
 #include "entity/player.h"
 #include <iostream>
+using namespace std;
+
+BH_ADD_RESOURCE(resources_animations_player_ship_png, player_ship_mem, player_ship_size)
 
 Player::Player(Game_Reqs *reqs, int radius) {
   anim_state = 0;
@@ -24,7 +27,9 @@ Player::Player(Game_Reqs *reqs, int radius) {
   fuel = 10000;
   wait_for_boost = 5;
 
-  sprite = al_load_bitmap("resources/animations/player_ship.png");
+  ALLEGRO_FILE *file = al_open_memfile(player_ship_mem,player_ship_size, "r");
+  sprite = al_load_bitmap_f(file, ".png");
+  
   check_sprite(reqs, sprite);
 
   for(int i=0; i<32; i++) {

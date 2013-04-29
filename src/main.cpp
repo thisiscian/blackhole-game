@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
   Player player(&reqs, 1600);
   player.draw();
   blackhole.draw();
-  al_play_sample(reqs.noise,1.0,0.0,1.0,ALLEGRO_PLAYMODE_LOOP, &reqs.noise_id);
+  al_play_sample(reqs.blackhole_noise_sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_LOOP, &reqs.noise_id);
   al_flip_display();
   al_start_timer(reqs.timer);
 
@@ -54,19 +54,19 @@ int main(int argc, char** argv) {
       switch (ev.keyboard.keycode) {
         case ALLEGRO_KEY_LEFT:
           key[KLEFT] = true;
-          al_play_sample(reqs.booster,1.0,1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KLEFT]);
+          al_play_sample(reqs.booster_sample,1.0,1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KLEFT]);
           break;
         case ALLEGRO_KEY_RIGHT:
           key[KRIGHT] = true;
-          al_play_sample(reqs.booster,1.0,-1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KRIGHT]);
+          al_play_sample(reqs.booster_sample,1.0,-1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KRIGHT]);
           break;
         case ALLEGRO_KEY_UP:
           key[KUP] = true;
-          al_play_sample(reqs.booster,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KUP]);
+          al_play_sample(reqs.booster_sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KUP]);
           break;
         case ALLEGRO_KEY_DOWN:
           key[KDOWN] = true;
-          al_play_sample(reqs.booster,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KDOWN]);
+          al_play_sample(reqs.booster_sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KDOWN]);
           break;
         case ALLEGRO_KEY_Q:
           player.destroy();

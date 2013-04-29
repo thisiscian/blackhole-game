@@ -1,17 +1,24 @@
 #include "engine/initialise.h"
 #include "engine/error.h"
 
+BH_ADD_RESOURCE(resources_sound_booster_ogg, booster_mem, booster_size);
+BH_ADD_RESOURCE(resources_sound_blackhole_noise_ogg, blackhole_noise_mem, blackhole_noise_size);
+
 Game_Reqs::Game_Reqs(float inFPS, float inWidth, float inHeight) {
   FPS = inFPS;
   screen_w = inWidth;
   screen_h = inHeight;
 
   check_init(this);
+  check_primitives();
   check_audio();
   reserve_audio_samples(2);
 
-  load_booster_sound(this, "resources/sound/booster.ogg");
-  load_blackhole_sound(this, "resources/sound/blackhole_noise.ogg");
+  ALLEGRO_FILE *booster_file = al_open_memfile(booster_mem,booster_size, "r");
+  ALLEGRO_FILE *blackhole_file = al_open_memfile(blackhole_noise_mem,blackhole_noise_size, "r");
+
+  load_booster_sound(this, booster_file);
+  load_blackhole_sound(this, blackhole_file);
   
   check_keyboard(this);
   set_timer(this, FPS);
@@ -33,8 +40,8 @@ void Game_Reqs::destroy() {
   al_destroy_timer(timer);
   al_destroy_display(display);
   al_destroy_event_queue(event_queue);
-  al_destroy_sample(booster);
-  al_destroy_sample(noise);
+  al_destroy_sample(booster_sample);
+  al_destroy_sample(blackhole_noise_sample);
 }
 
 float Game_Reqs::get_FPS() {
