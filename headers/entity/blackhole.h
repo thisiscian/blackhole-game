@@ -4,6 +4,8 @@
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_image.h"
 #include "allegro5/allegro_primitives.h"
+#include "allegro5/allegro_audio.h"
+#include "engine/engine.h"
 #include <math.h>
 
 class BlackHole{
@@ -23,6 +25,8 @@ class BlackHole{
   void draw();
   void change_offset(float new_offset);
   void change_height(float new_height);
+  ALLEGRO_SAMPLE *sample;
+  ALLEGRO_SAMPLE_ID sample_id;
 };
 
 #endif

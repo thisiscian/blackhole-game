@@ -4,8 +4,7 @@
 #include "allegro5/allegro_image.h"
 #include "entity/blackhole.h"
 #include "entity/player.h"
-#include "engine/error.h"
-#include "engine/initialise.h"
+#include "engine/engine.h"
 using namespace std;
 
   enum MYKEYS {
@@ -13,98 +12,81 @@ using namespace std;
   };
 
 int main(int argc, char** argv) {
-  Game_Reqs reqs(60,640,480);
-  ALLEGRO_COLOR background = al_map_rgb_f(0.0,0.0,0.0);
-
-  bool key[4] = {false,false,false,false};
-  ALLEGRO_SAMPLE_ID booster_id[4];
+  bool key_down[4] = {false,false,false,false};
   bool redraw = true;
+  Engine engine(60,640,480);
 
+  ALLEGRO_COLOR background = al_map_rgb_f(0.0,0.0,0.0);
   al_clear_to_color(background);
 
-  BlackHole blackhole(reqs.get_width(),reqs.get_height(), 1500, 100);
-  Player player(&reqs, 1600);
+  BlackHole blackhole(engine.get_width(),engine.get_height(), 1500, 100);
+  Player player(&engine, 1600);
   player.draw();
   blackhole.draw();
-  al_play_sample(reqs.blackhole_noise_sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_LOOP, &reqs.noise_id);
+
   al_flip_display();
-  al_start_timer(reqs.timer);
+  al_start_timer(engine.timer);
 
   while(1){
     ALLEGRO_EVENT ev;
-    al_wait_for_event(reqs.event_queue, &ev);
+    al_wait_for_event(engine.event_queue, &ev);
     
     if(ev.type == ALLEGRO_EVENT_TIMER) {
-      if(key[KLEFT]) {
-        player.left(key[KLEFT]);
-      }
-      if(key[KRIGHT]) {
-        player.right(key[KRIGHT]);
-      }
-      if(key[KUP]) {
-        player.up(key[KUP]);
-      }
-      if(key[KDOWN]) {
-        player.down(key[KDOWN]);
-      }
+      player.left(key_down[KLEFT]);
+      player.right(key_down[KRIGHT]);
+      player.up(key_down[KUP]);
+      player.down(key_down[KDOWN]);
       redraw = true;
     } else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
       break;
     } else if(ev.type == ALLEGRO_EVENT_KEY_DOWN) {
       switch (ev.keyboard.keycode) {
         case ALLEGRO_KEY_LEFT:
-          key[KLEFT] = true;
-          al_play_sample(reqs.booster_sample,1.0,1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KLEFT]);
+          key_down[KLEFT] = true;
           break;
         case ALLEGRO_KEY_RIGHT:
-          key[KRIGHT] = true;
-          al_play_sample(reqs.booster_sample,1.0,-1.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KRIGHT]);
+          key_down[KRIGHT] = true;
           break;
         case ALLEGRO_KEY_UP:
-          key[KUP] = true;
-          al_play_sample(reqs.booster_sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KUP]);
+          key_down[KUP] = true;
           break;
         case ALLEGRO_KEY_DOWN:
-          key[KDOWN] = true;
-          al_play_sample(reqs.booster_sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_ONCE,&booster_id[KDOWN]);
+          key_down[KDOWN] = true;
           break;
         case ALLEGRO_KEY_Q:
           player.destroy();
-          reqs.destroy();
+          engine.destroy();
           exit(0);
           break;
       }
     } else if(ev.type == ALLEGRO_EVENT_KEY_UP) {
       switch (ev.keyboard.keycode) {
         case ALLEGRO_KEY_LEFT:
-          key[KLEFT] = false;
-          al_stop_sample(&booster_id[KLEFT]);
+          key_down[KLEFT] = false;
           break;
         case ALLEGRO_KEY_RIGHT:
-          key[KRIGHT] = false;
-          al_stop_sample(&booster_id[KRIGHT]);
+          key_down[KRIGHT] = false;
           break;
         case ALLEGRO_KEY_UP:
-          key[KUP] = false;
-          al_stop_sample(&booster_id[KUP]);
+          key_down[KUP] = false;
           break;
         case ALLEGRO_KEY_DOWN:
-          key[KDOWN] = false;
-          al_stop_sample(&booster_id[KDOWN]);
+          key_down[KDOWN] = false;
           break;
       }
     }
-    if(redraw && al_is_event_queue_empty(reqs.event_queue)) {
+    if(redraw && al_is_event_queue_empty(engine.event_queue)) {
       redraw = false;
       al_clear_to_color(background);
       blackhole.draw();
+      player.update();
       player.draw();
-      blackhole.change_offset(player.get_angle());
-      blackhole.change_height(player.get_radial_position());
+      blackhole.change_height(player.get_r());
+      blackhole.change_offset(player.get_s());
       al_flip_display();
     }
   }
   player.destroy();
-  reqs.destroy();
+  engine.destroy();
   return 0;
 }

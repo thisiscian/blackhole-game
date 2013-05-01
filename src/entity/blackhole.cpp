@@ -1,6 +1,7 @@
 #include "entity/blackhole.h"
 #define PI 3.1415926
 
+BH_ADD_RESOURCE(resources_sound_blackhole_noise_ogg, blackhole_noise_mem, blackhole_noise_size);
 BlackHole::BlackHole(int screen_width, int screen_height, int rad, int height) {
   radius = rad;
   screen_w = screen_width;
@@ -10,6 +11,10 @@ BlackHole::BlackHole(int screen_width, int screen_height, int rad, int height) {
   colour = al_map_rgb_f(0.01,0.0,0.01);
   offset = 0.0;
   calculate_arc();
+
+  ALLEGRO_FILE *blackhole_file = al_open_memfile(blackhole_noise_mem,blackhole_noise_size, "r");
+  sample = get_sample(blackhole_file, "blackhole_noise.ogg");
+  al_play_sample(sample,1.0,0.0,1.0,ALLEGRO_PLAYMODE_LOOP, &sample_id);
 }
 
 void BlackHole::calculate_arc() {
